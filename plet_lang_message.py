@@ -1,10 +1,13 @@
 import json
 from charsets.ansi_colors import ANSI_COLORS
 
-BRACKETS = ("{", "}")
+BRACKETS = ("1110", "1111")
 
 with open("charsets/shorthand_0b.json", encoding="utf8") as file:
     phon_chars = json.load(file)
+
+with open("charset_translator.json", encoding="utf8") as file:
+    charsets = json.load(file)
 
 
 class PletLangMessage:
@@ -19,6 +22,7 @@ class PletLangMessage:
         self.pmsg = self.pmsg.replace("   ", "TEMP")
         self.pmsg = self.pmsg.replace(" ", "")
         self.pmsg = self.pmsg.replace("TEMP", " ")
+        # Charset translator bit
 
     def get_phonetics(self) -> str:
         if not self.fmsg:
@@ -31,6 +35,10 @@ class PletLangMessage:
         """
         def pmsg_delete(num_chars):
             self.pmsg = self.pmsg[num_chars:]
+
+        def brackets_next(text_type: str):
+            # TODO somehow fix the brackets system so that it works with 0s and 1s
+            pass
 
         def interpret_brackets():
             if self.pmsg.startswith("{{"):
@@ -66,6 +74,7 @@ class PletLangMessage:
                 pmsg_delete(4)
 
         def read_shorthand():
+            print("ok")
             while self.pmsg:
                 if self.pmsg.startswith(BRACKETS):
                     # Interpret where the message will go next based on brackets
@@ -78,6 +87,7 @@ class PletLangMessage:
                     read_char()
 
         def read_longhand():
+            print("ok2")
             # Read "{{1101 00000101" as a w in magenta; 0000 is the null color and 1101 is its default.
             default_color = self.pmsg[:4]
             pmsg_delete(4)
